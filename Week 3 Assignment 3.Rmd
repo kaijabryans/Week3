@@ -1,0 +1,96 @@
+---
+title: "Week 3 Assignment 3"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Project Info
+January 29th, 2021
+https://github.com/kaijabryans/Week3.git
+
+### Load Packages
+```{r packages, results = "hide"}
+library(dplyr)
+```
+
+
+### Importing the data frame
+```{r}
+getwd()
+mydata = read.csv("./InputData/FallopiaData.csv")
+
+# Converting to a data frame
+mydata = as.data.frame(mydata)
+head(mydata)
+```
+
+### Data Wrangling
+```{r}
+# Removing rows with Total biomass < 60
+dat1 = filter(mydata, Total > 60)
+
+# Reordering the columns
+dat2 = select(dat1, Total, Taxon, Scenario, Nutrients)
+
+# Make colume TotalG
+dat3 = dat2 %>% mutate(TotalG = Total/1000) %>% select(TotalG, Taxon, Scenario, Nutrients)
+
+# Confirm Dataset
+str(dat3)
+```
+
+### Writing a Custom Function
+```{r}
+fallopian.function <- function(K = c(), calc = c("Average", "Sum", "Observations")) {
+  if (calc == "Average") {
+    print(mean(K))
+  }
+  else if (calc == "Sum") {
+    print(sum(K))
+  }
+  else if (calc == "Observations") {
+    print(length(K))
+  }
+  else{
+    cat("Error: cannot find input")
+  }
+}
+```
+
+### Using the Custom Function 
+```{r}
+# Calculating the average of the TotalG column
+fallopian.function(dat3$TotalG, "Average")
+```
+
+```{r}
+# Calculating the average TotalG for the Nutrient concentrations
+Adat3 = dat3 %>% group_by(Nutrients) %>% summarise(Adat3 = fallopian.function(TotalG, "Average"))
+
+# View Results
+Adat3
+```
+### Creating .csv file
+```{r}
+write.csv(dat3, "./Output/WrangledData.csv")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
