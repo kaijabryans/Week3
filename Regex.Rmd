@@ -1,0 +1,48 @@
+---
+title: "Regex"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Project Info
+February 5th, 2021
+https://github.com/kaijabryans/Week3.git
+
+## Load Packages
+```{r packages,results="hide"}
+library(dplyr)
+```
+
+## Importing the data frame
+```{r}
+getwd()
+MData <- read.csv("/Users/kaijabryans/Desktop/BIO 432/Week 1/measurements.csv", header = T)
+head(MData)
+```
+
+### Data Wrangling 
+
+```{r}
+#Creating New SP Column
+MData2 = MData %>% mutate(Sp = gsub("(\\w)\\w+(.*\\s)", "\\1\\2.\\3", MData$Organism))
+
+#Checking data
+MData2
+```
+
+```{r}
+#Make New Dataset
+MData3 = select(MData2, Sp, Limb.width, Limb.length, Observer)
+
+#Creating .csv file
+write.csv(MData3, "/Users/kaijabryans/Desktop/BIO 432/Week 3/Assignment 3/MeasShort.csv")
+```
+
+
+
+
+
+
